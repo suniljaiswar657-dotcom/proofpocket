@@ -1,9 +1,14 @@
 import { get, list, put } from "@vercel/blob";
+import { hasValidSession, isSameOrigin, unauthorized } from "./_auth.js";
 
 const PRIVATE = { access: "private" };
 const headers = { "Content-Type": "application/json", "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
 
 export default async function handler(request) {
+  if (!hasValidSession(request)) return unauthorized();
+  if (request.method !== "GET" && !isSameOrigin(request)) {
+    return new Response(JSON.stringify({ error: "Request origin rejected." }), { status: 403, headers });
+  }
   try {
     if (request.method === "GET") {
       let cursor;
