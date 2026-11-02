@@ -22,7 +22,7 @@
         <a class="nav-link" href="#warranties"><span>◷</span> Warranties</a>
         <a class="nav-link" href="#records"><span>▧</span> Documents</a>
       </nav>
-      <div class="sidebar-note"><span class="secure-dot"></span><div><strong>Private cloud vault</strong><small>Protected by Vercel login</small></div></div>
+      <div class="sidebar-note"><span class="secure-dot"></span><div><strong>Private cloud vault</strong><small>Password-protected access</small></div></div>
       <div class="sidebar-bottom">PROOFPOCKET <span>·</span> PRIVATE CLOUD</div>
     </aside>
 
@@ -30,7 +30,7 @@
       <header class="topbar">
         <div class="mobile-brand"><span class="brand-mark">P</span> PROOFPOCKET</div>
         <div class="breadcrumb">Workspace <span>/</span> Overview</div>
-        <div class="topbar-right"><span class="status-pill" id="syncStatus"><i></i> Connecting cloud...</span><div class="avatar">P</div></div>
+        <div class="topbar-right"><span class="status-pill" id="syncStatus"><i></i> Login required</span><button type="button" class="logout-btn" id="logoutBtn">Lock vault</button><div class="avatar">P</div></div>
       </header>
 
       <section class="welcome-row">
@@ -69,11 +69,23 @@
       <label>Photo or PDF <span class="optional">(optional · max 4 MB)</span><input class="file-input" name="attachment" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></label>
       <p class="file-help">Accepted: JPG, PNG, WEBP and PDF. Files are stored privately in Vercel Blob.</p>
       <label>Notes <span class="optional">(optional)</span><textarea name="notes" rows="3" maxlength="300" placeholder="Add a short note..."></textarea></label>
-      <p class="privacy-note">Your vault is protected by Vercel Authentication. Records and attachments are stored in your private cloud vault, not in this browser.</p>
+      <p class="privacy-note">Your vault requires your private password. Records and attachments are stored in your private cloud vault.</p>
       <p class="form-error" id="formError" role="alert"></p>
       <div class="dialog-actions"><button type="button" class="secondary-btn" id="cancelDialog">Cancel</button><button class="primary-btn" id="saveRecordBtn" type="submit">Save record</button></div>
     </form>
   </dialog>
+  <section class="auth-gate" id="authGate" hidden aria-label="Unlock PROOFPOCKET">
+    <form class="auth-card" id="authForm">
+      <div class="auth-mark">P</div>
+      <p class="eyebrow">PRIVATE DIGITAL VAULT</p>
+      <h2>Unlock PROOFPOCKET</h2>
+      <p>Enter your vault password to access your records and attachments.</p>
+      <label for="vaultPassword">Vault password</label>
+      <input id="vaultPassword" name="password" type="password" autocomplete="current-password" minlength="12" required>
+      <p class="auth-error" id="authError" role="alert"></p>
+      <button class="primary-btn" id="authSubmit" type="submit">Unlock vault</button>
+    </form>
+  </section>
   <script src="app.js"></script>
 </body>
 </html>
