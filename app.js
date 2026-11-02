@@ -110,10 +110,10 @@ async function initialiseVault() {
   } catch (error) {
     records = readLocalBackup();
     setStatus("Cloud unavailable", true);
-    list.innerHTML = '<div class="empty-state"><strong>Cloud connection issue</strong><p>' + escapeHTML(error.message) + '</p><button class="secondary-btn" id="retryCloud">Retry connection</button></div>';
+    render();
+    list.insertAdjacentHTML("afterbegin", '<div class="cloud-warning"><strong>Cloud connection issue</strong><p>' + escapeHTML(error.message) + '</p><button class="secondary-btn" id="retryCloud">Retry connection</button></div>');
     const retry = document.getElementById("retryCloud");
     if (retry) retry.addEventListener("click", initialiseVault);
-    render();
   }
 }
 
