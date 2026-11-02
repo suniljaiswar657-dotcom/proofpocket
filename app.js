@@ -6,6 +6,10 @@ const warrantyList = document.getElementById("warrantyList");
 const syncStatus = document.getElementById("syncStatus");
 const formError = document.getElementById("formError");
 const saveButton = document.getElementById("saveRecordBtn");
+const authGate = document.getElementById("authGate");
+const authForm = document.getElementById("authForm");
+const authError = document.getElementById("authError");
+const authSubmit = document.getElementById("authSubmit");
 let records = [];
 let cloudReady = false;
 
@@ -88,8 +92,33 @@ async function createCloudRecord(record) {
   }
   return await response.json();
 }
+function showAuthGate(message = "") {
+  authGate.hidden = false;
+  authError.textContent = message;
+  setStatus("Login required", true);
+}
+function hideAuthGate() {
+  authGate.hidden = true;
+  authError.textContent = "";
+}
+async function checkVaultSession() {
+  const response = await fetch("/api/auth/session", { credentials: "same-origin", cache: "no-store" });
+  if (response.status === 503) {
+    showAuthGate("Vault setup pending. Add PP_VAULT_PASSWORD and PP_SESSION_SECRET in Vercel settings.");
+    return false;
+  }
+  if (!response.ok) throw new Error("Could not verify vault session.");
+  const state = await response.json();
+  if (!state.authenticated) {
+    showAuthGate();
+    return false;
+  }
+  hideAuthGate();
+  return true;
+}
 async function initialiseVault() {
   try {
+    if (!await checkVaultSession()) return;
     setStatus("Connecting cloud...");
     let cloudRecords = await getCloudRecords();
     const localRecords = readLocalBackup();
@@ -117,6 +146,36 @@ async function initialiseVault() {
   }
 }
 
+authForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  authSubmit.disabled = true;
+  authSubmit.textContent = "Unlocking...";
+  authError.textContent = "";
+  try {
+    const password = String(new FormData(authForm).get("password") || "");
+    const response = await fetch("/api/auth/login", {
+      method: "POST", credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password })
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "Login failed.");
+    authForm.reset();
+    hideAuthGate();
+    await initialiseVault();
+  } catch (error) {
+    authError.textContent = error.message;
+  } finally {
+    authSubmit.disabled = false;
+    authSubmit.textContent = "Unlock vault";
+  }
+});
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+  records = [];
+  render();
+  showAuthGate("You are logged out.");
+});
 document.getElementById("openAdd").addEventListener("click", openDialog);
 document.getElementById("closeDialog").addEventListener("click", () => dialog.close());
 document.getElementById("cancelDialog").addEventListener("click", () => dialog.close());
