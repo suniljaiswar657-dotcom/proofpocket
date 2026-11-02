@@ -1,6 +1,8 @@
 import { get } from "@vercel/blob";
+import { hasValidSession, unauthorized } from "./_auth.js";
 
 export default async function handler(request) {
+  if (!hasValidSession(request)) return unauthorized();
   if (request.method !== "GET") return new Response("Method not allowed", { status: 405, headers: { Allow: "GET" } });
   const pathname = new URL(request.url).searchParams.get("pathname") || "";
   if (!pathname.startsWith("attachments/") || pathname.split("/").some(part => !part || part === "." || part === "..")) {
