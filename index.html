@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#090b10">
-  <meta name="description" content="PROOFPOCKET — your personal digital vault for receipts, documents and warranties.">
+  <meta name="description" content="PROOFPOCKET — your private digital vault for receipts, documents and warranties.">
   <title>PROOFPOCKET — Personal Digital Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,26 +20,26 @@
         <a class="nav-link active" href="#overview"><span>▦</span> Overview</a>
         <a class="nav-link" href="#records"><span>▤</span> My records</a>
         <a class="nav-link" href="#warranties"><span>◷</span> Warranties</a>
-        <a class="nav-link" href="#documents"><span>▧</span> Documents</a>
+        <a class="nav-link" href="#records"><span>▧</span> Documents</a>
       </nav>
-      <div class="sidebar-note"><span class="secure-dot"></span><div><strong>Your vault, your control</strong><small>Private workspace preview</small></div></div>
-      <div class="sidebar-bottom">PROOFPOCKET <span>·</span> MVP PREVIEW</div>
+      <div class="sidebar-note"><span class="secure-dot"></span><div><strong>Private cloud vault</strong><small>Protected by Vercel login</small></div></div>
+      <div class="sidebar-bottom">PROOFPOCKET <span>·</span> PRIVATE CLOUD</div>
     </aside>
 
     <main class="main-content" id="overview">
       <header class="topbar">
         <div class="mobile-brand"><span class="brand-mark">P</span> PROOFPOCKET</div>
         <div class="breadcrumb">Workspace <span>/</span> Overview</div>
-        <div class="topbar-right"><span class="status-pill"><i></i> Local preview</span><div class="avatar">S</div></div>
+        <div class="topbar-right"><span class="status-pill" id="syncStatus"><i></i> Connecting cloud...</span><div class="avatar">P</div></div>
       </header>
 
       <section class="welcome-row">
-        <div><p class="eyebrow">PERSONAL DIGITAL VAULT</p><h1>Everything important.<br><span>In one pocket.</span></h1><p class="subheading">Keep your receipts, documents and warranties organized.</p></div>
+        <div><p class="eyebrow">PERSONAL DIGITAL VAULT</p><h1>Everything important.<br><span>In one pocket.</span></h1><p class="subheading">Your receipts, documents and warranties — privately synced to your cloud vault.</p></div>
         <button class="primary-btn" id="openAdd"><span>＋</span> Add a record</button>
       </section>
 
       <section class="stats-grid" aria-label="Vault summary">
-        <article class="stat-card"><div class="stat-top"><span>Total records</span><span class="stat-icon">▤</span></div><strong id="totalCount">0</strong><small>Saved in your vault</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Total records</span><span class="stat-icon">▤</span></div><strong id="totalCount">0</strong><small>Saved in your cloud vault</small></article>
         <article class="stat-card"><div class="stat-top"><span>Active warranties</span><span class="stat-icon">◷</span></div><strong id="warrantyCount">0</strong><small>Products being tracked</small></article>
         <article class="stat-card"><div class="stat-top"><span>Expiring soon</span><span class="stat-icon warning-icon">!</span></div><strong id="expiringCount">0</strong><small>Within the next 30 days</small></article>
       </section>
@@ -48,15 +48,15 @@
         <div class="panel records-panel" id="records">
           <div class="panel-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2>Recent records</h2></div><button class="text-btn" id="showAll">View all <span>→</span></button></div>
           <div class="toolbar"><label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search records..." aria-label="Search records"></label><select id="typeFilter" aria-label="Filter by type"><option value="all">All types</option><option value="Receipt">Receipts</option><option value="Warranty">Warranties</option><option value="Document">Documents</option></select></div>
-          <div class="record-list" id="recordList"><div class="empty-state"><div class="empty-icon">▤</div><strong>Your vault is ready</strong><p>Add your first receipt, warranty or document to get started.</p><button class="secondary-btn" id="emptyAdd">＋ Add first record</button></div></div>
+          <div class="record-list" id="recordList"><div class="loading-state">Loading your private cloud records...</div></div>
         </div>
         <div class="panel side-panel" id="warranties">
           <div class="panel-heading"><div><p class="eyebrow">STAY PREPARED</p><h2>Warranty watch</h2></div><span class="mini-icon">◷</span></div>
-          <div id="warrantyList" class="warranty-list"><div class="small-empty">Your saved warranties will appear here.</div></div>
+          <div id="warrantyList" class="warranty-list"><div class="small-empty">Loading warranties...</div></div>
           <div class="tip-box"><span>✦</span><div><strong>Good to know</strong><p>Add a purchase date and warranty end date to keep track of product coverage.</p></div></div>
         </div>
       </section>
-      <footer>PROOFPOCKET <span>·</span> A simpler way to keep what matters.</footer>
+      <footer>PROOFPOCKET <span>·</span> Private cloud storage for what matters.</footer>
     </main>
   </div>
 
@@ -66,9 +66,12 @@
       <label>Record title<input name="title" maxlength="70" placeholder="e.g. Samsung phone purchase" required></label>
       <div class="form-row"><label>Record type<select name="type"><option>Receipt</option><option>Warranty</option><option>Document</option></select></label><label>Purchase / issue date<input name="date" type="date"></label></div>
       <label>Warranty end date <span class="optional">(optional)</span><input name="warrantyEnd" type="date"></label>
+      <label>Photo or PDF <span class="optional">(optional · max 4 MB)</span><input class="file-input" name="attachment" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></label>
+      <p class="file-help">Accepted: JPG, PNG, WEBP and PDF. Files are stored privately in Vercel Blob.</p>
       <label>Notes <span class="optional">(optional)</span><textarea name="notes" rows="3" maxlength="300" placeholder="Add a short note..."></textarea></label>
-      <p class="privacy-note">This preview stores entries in this browser only. Cloud sync and secure file storage are not connected yet.</p>
-      <div class="dialog-actions"><button type="button" class="secondary-btn" id="cancelDialog">Cancel</button><button class="primary-btn" type="submit">Save record</button></div>
+      <p class="privacy-note">Your vault is protected by Vercel Authentication. Records and attachments are stored in your private cloud vault, not in this browser.</p>
+      <p class="form-error" id="formError" role="alert"></p>
+      <div class="dialog-actions"><button type="button" class="secondary-btn" id="cancelDialog">Cancel</button><button class="primary-btn" id="saveRecordBtn" type="submit">Save record</button></div>
     </form>
   </dialog>
   <script src="app.js"></script>
