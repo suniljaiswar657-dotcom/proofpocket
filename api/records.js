@@ -9,7 +9,7 @@ export default async function handler(request) {
       let cursor;
       const entries = [];
       do {
-        const page = await list({ prefix: "records/", limit: 1000, cursor, ...PRIVATE });
+        const page = await list({ prefix: "records/", limit: 1000, cursor });
         entries.push(...page.blobs);
         cursor = page.hasMore ? page.cursor : undefined;
       } while (cursor);
