@@ -69,12 +69,12 @@ export function hasValidSession(request) {
 
 export function verifyVaultPassword(candidate) {
   const expected = process.env.PP_VAULT_PASSWORD || "";
-  if (expected.length < 12) throw new Error("PP_VAULT_PASSWORD must contain at least 12 characters.");
+  if (expected.length < 16) throw new Error("PP_VAULT_PASSWORD must contain at least 16 characters.");
   return safeEqual(candidate, expected);
 }
 
 export function authConfigReady() {
-  return (process.env.PP_VAULT_PASSWORD || "").length >= 12 &&
+  return (process.env.PP_VAULT_PASSWORD || "").length >= 16 &&
     (process.env.PP_SESSION_SECRET || "").length >= 32;
 }
 
